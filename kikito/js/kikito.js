@@ -532,7 +532,7 @@ KK.Controller = function (model, view) {
     }
 
     var _handleUnselectAll = function (e) {
-        if (typeof (e.target) !== "undefined" && (e.target.className.indexOf("h-ele") >= 0)) return;
+        if (e.target.className.indexOf("h-ele") >= 0) return;
         
         for (var i=0; i < _listSelectedElements.length; i++) {
             _view.unselectElement(_listSelectedElements[i]);
@@ -591,6 +591,35 @@ KK.Controller = function (model, view) {
                    _handleTapAndHold(e);
                 }, 500);
             });
+            
+            //mousedown does not work for mobile Safari. We need to use touchstart, touchend
+            list[i].addEventListener("touchstart", function(e) {
+                console.log("touchstart");
+                                     
+                                     if(typeof (e.target) === "undefined" || e.target.className !== "h-ele") return;
+                                     
+                                     timer = setTimeout(function() {
+                                                        tapAndHoldInProgress = true;
+                                                        _handleTapAndHold(e);
+                                                        }, 500);
+                                     
+                                     
+                                     
+            });
+            
+            list[i].addEventListener("touchend", function(e) {
+                console.log("touchend");
+
+                                     clearTimeout(timer);
+                                     
+                                     //this setTimeout is a workaround for Safari. It is triggering click event after mouseup.
+                                     setTimeout(function() {
+                                                tapAndHoldInProgress = false;
+                                                }, 200);
+              
+                                     
+                                     });
+            
 
             list[i].addEventListener("mouseup", function(e) {
                 clearTimeout(timer);
