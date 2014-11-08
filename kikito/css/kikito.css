@@ -2,6 +2,7 @@ body {
     background: #191919;
     font-family: sans-serif;
     margin: 0px;
+    -webkit-user-select: none; /* disable native selection */ 
 }
 
 .header {
